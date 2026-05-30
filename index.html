@@ -54,7 +54,8 @@ section{padding:6rem 3rem;}
 .about{background:var(--navy-dark);}
 .about-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
 .about-img-wrap{position:relative;}
-.about-img-placeholder{width:100%;aspect-ratio:3/4;background:var(--navy-deep);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:5rem;}
+.about-img-placeholder{width:100%;aspect-ratio:3/4;background:var(--navy-deep);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:5rem;overflow:hidden;position:relative;}
+.about-img-placeholder img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
 .about-img-accent{position:absolute;bottom:-1.2rem;right:-1.2rem;width:55%;aspect-ratio:1;border:2px solid var(--gold);z-index:-1;}
 .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3rem;}
 .stat{border-left:2px solid var(--gold);padding-left:1rem;}
@@ -62,8 +63,13 @@ section{padding:6rem 3rem;}
 .stat-label{font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;}
 .gallery-strip{background:var(--navy-deep);}
 .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-top:2.5rem;}
-.gallery-cell{aspect-ratio:1;background:var(--navy-dark);border:1px solid rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:2rem;transition:border-color 0.3s;cursor:pointer;}
-.gallery-cell:hover{border-color:var(--gold);}
+.gallery-cell{aspect-ratio:1;background:var(--navy-dark);border:1px solid rgba(201,168,76,0.1);overflow:hidden;position:relative;transition:border-color 0.3s,transform 0.3s;cursor:pointer;}
+.gallery-cell:hover{border-color:var(--gold);transform:scale(1.02);}
+.gallery-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s;}
+.gallery-cell:hover img{transform:scale(1.07);}
+.gallery-cell .empty-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--text-muted);}
+.gallery-cell input[type=file]{display:none;}
+.upload-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;cursor:pointer;color:var(--gold);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;background:rgba(5,13,69,0.78);opacity:0;transition:opacity 0.3s;}
 .booking{background:var(--navy-deep);}
 .booking-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
 .booking-form{display:flex;flex-direction:column;gap:1rem;}
@@ -144,8 +150,15 @@ footer{background:var(--navy-deep);padding:2.5rem 3rem;border-top:1px solid rgba
   <div class="wrap">
     <div class="about-inner">
       <div class="about-img-wrap">
-        <div class="about-img-placeholder">&#128136;</div>
+        <div class="about-img-placeholder" id="aboutImgWrap">
+          <img id="aboutImg" src="images/logo.png"  alt="Msimang &amp; Co. Barbershop" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" onerror="this.style.display='none';document.getElementById('aboutFallback').style.display='flex'" />
+          <div id="aboutFallback" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:5rem;">&#128136;</div>
+          <label for="aboutImgInput" class="upload-label" title="Click to replace photo" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;color:var(--gold);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;background:rgba(5,13,69,0.75);opacity:0;transition:opacity 0.3s;z-index:2;">
+          </label>
+          <input type="file" id="aboutImgInput" accept="image/*" style="display:none;" onchange="replaceAboutPhoto(this)" />
+        </div>
         <div class="about-img-accent"></div>
+        <style>#aboutImgWrap:hover .upload-label{opacity:1!important;}</style>
       </div>
       <div>
         <div class="section-label">Our Story</div>
@@ -169,13 +182,48 @@ footer{background:var(--navy-deep);padding:2.5rem 3rem;border-top:1px solid rgba
     <div class="section-label">The Work</div>
     <div class="section-title">Gallery</div>
     <div class="divider"></div>
-    <div class="gallery-grid">
-      <div class="gallery-cell">&#128136;</div><div class="gallery-cell">&#9986;</div>
-      <div class="gallery-cell">&#129522;</div><div class="gallery-cell">&#129471;</div>
-      <div class="gallery-cell">&#9889;</div><div class="gallery-cell">&#128081;</div>
-      <div class="gallery-cell">&#128136;</div><div class="gallery-cell">&#9986;</div>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-cell" onclick="triggerUpload(0)">
+        <img src="images/normal-fede.webp"  alt="Haircut" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="empty-icon" style="display:none">&#9986;</div>
+        <input type="file" accept="image/*" id="gup0" onchange="replaceGalleryPhoto(this,0)" style="display:none" />
+      </div>
+      <div class="gallery-cell" onclick="triggerUpload(1)">
+        <img src="images/beard_sculpt.webp"  alt="Barber at work" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="empty-icon" style="display:none">&#128136;</div>
+        <input type="file" accept="image/*" id="gup1" onchange="replaceGalleryPhoto(this,1)" style="display:none" />
+      </div>
+      <div class="gallery-cell" onclick="triggerUpload(2)">
+        <img src="images/women_fade_and_desigg.jpg"  alt="Fade haircut" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="empty-icon" style="display:none">&#129522;</div>
+        <input type="file" accept="image/*" id="gup2" onchange="replaceGalleryPhoto(this,2)" style="display:none" />
+      </div>
+      <div class="gallery-cell" onclick="triggerUpload(3)">
+        <img src="images/hot_towel.jpg"  alt="Beard trim" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="empty-icon" style="display:none">&#129471;</div>
+        <input type="file" accept="image/*" id="gup3" onchange="replaceGalleryPhoto(this,3)" style="display:none" />
+      </div>
+      <div class="gallery-cell" onclick="triggerUpload(4)">
+        <img src="images/full_groom.webp"  alt="Barber shop interior" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="empty-icon" style="display:none">&#9889;</div>
+        <input type="file" accept="image/*" id="gup4" onchange="replaceGalleryPhoto(this,4)" style="display:none" />
+      </div>
+      <div class="gallery-cell" onclick="triggerUpload(5)">
+        <img src="images/kids.jpg"  alt="Haircut style" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="empty-icon" style="display:none">&#128081;</div>
+        <input type="file" accept="image/*" id="gup5" onchange="replaceGalleryPhoto(this,5)" style="display:none" />
+      </div>
+      <div class="gallery-cell" onclick="triggerUpload(6)">
+        <img src="images/taper.jpg"  alt="Shave" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="empty-icon" style="display:none">&#128136;</div>
+        <input type="file" accept="image/*" id="gup6" onchange="replaceGalleryPhoto(this,6)" style="display:none" />
+      </div>
+      <div class="gallery-cell" onclick="triggerUpload(7)">
+        <img src="images/women_buzz_cut.jpg"  alt="Barber" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="empty-icon" style="display:none">&#9986;</div>
+        <input type="file" accept="image/*" id="gup7" onchange="replaceGalleryPhoto(this,7)" style="display:none" />
+      </div>
     </div>
-    <!-- People pics to be uploaded -->
   </div>
 </section>
 
@@ -365,6 +413,77 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a) {
     if (tgt) { e.preventDefault(); tgt.scrollIntoView({ behavior: 'smooth' }); }
   });
 });
+</script>
+<script>
+// Photo upload — runs after DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+  // Hover overlays for gallery cells
+  document.querySelectorAll('.gallery-cell').forEach(function(cell) {
+    cell.addEventListener('mouseenter', function() {
+      var lbl = cell.querySelector('.upload-label');
+      if (lbl) lbl.style.opacity = '1';
+    });
+    cell.addEventListener('mouseleave', function() {
+      var lbl = cell.querySelector('.upload-label');
+      if (lbl) lbl.style.opacity = '0';
+    });
+  });
+  // Hover overlay for about image
+  var wrap = document.getElementById('aboutImgWrap');
+  if (wrap) {
+    wrap.style.cursor = 'pointer';
+    wrap.addEventListener('mouseenter', function() {
+      var lbl = wrap.querySelector('.upload-label');
+      if (lbl) lbl.style.opacity = '1';
+    });
+    wrap.addEventListener('mouseleave', function() {
+      var lbl = wrap.querySelector('.upload-label');
+      if (lbl) lbl.style.opacity = '0';
+    });
+  }
+  // Stop file inputs bubbling up to onclick handlers
+  document.querySelectorAll('input[type=file]').forEach(function(inp) {
+    inp.addEventListener('click', function(e) { e.stopPropagation(); });
+  });
+});
+
+function replaceAboutPhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = document.getElementById('aboutImg');
+    img.src = e.target.result;
+    img.style.display = '';
+    var fb = document.getElementById('aboutFallback');
+    if (fb) fb.style.display = 'none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function triggerUpload(idx) {
+  document.getElementById('gup' + idx).click();
+}
+
+function replaceGalleryPhoto(input, idx) {
+  if (!input.files || !input.files[0]) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var cell = input.closest('.gallery-cell');
+    var icon = cell.querySelector('.empty-icon');
+    if (icon) icon.style.display = 'none';
+    var img = cell.querySelector('img');
+    if (img) {
+      img.src = e.target.result;
+      img.style.display = '';
+    } else {
+      var newImg = document.createElement('img');
+      newImg.src = e.target.result;
+      newImg.alt = 'Gallery photo';
+      cell.insertBefore(newImg, cell.firstChild);
+    }
+  };
+  reader.readAsDataURL(input.files[0]);
+}
 </script>
 </body>
 </html>
