@@ -63,7 +63,7 @@ section{padding:6rem 3rem;}
 .stat-label{font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;}
 .gallery-strip{background:var(--navy-deep);}
 .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-top:2.5rem;}
-.gallery-cell{aspect-ratio:1;background:var(--navy-dark);border:1px solid rgba(201,168,76,0.1);overflow:hidden;position:relative;transition:border-color 0.3s,transform 0.3s;cursor:pointer;}
+.gallery-cell{aspect-ratio:1;background:var(--navy-dark);border:1px solid rgba(201,168,76,0.1);overflow:hidden;position:relative;transition:border-color 0.3s,transform 0.3s;}
 .gallery-cell:hover{border-color:var(--gold);transform:scale(1.02);}
 .gallery-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s;}
 .gallery-cell:hover img{transform:scale(1.07);}
@@ -153,9 +153,6 @@ footer{background:var(--navy-deep);padding:2.5rem 3rem;border-top:1px solid rgba
         <div class="about-img-placeholder" id="aboutImgWrap">
           <img id="aboutImg" src="images/logo.png"  alt="Msimang &amp; Co. Barbershop" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" onerror="this.style.display='none';document.getElementById('aboutFallback').style.display='flex'" />
           <div id="aboutFallback" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:5rem;">&#128136;</div>
-          <label for="aboutImgInput" class="upload-label" title="Click to replace photo" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;color:var(--gold);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;background:rgba(5,13,69,0.75);opacity:0;transition:opacity 0.3s;z-index:2;">
-          </label>
-          <input type="file" id="aboutImgInput" accept="image/*" style="display:none;" onchange="replaceAboutPhoto(this)" />
         </div>
         <div class="about-img-accent"></div>
         <style>#aboutImgWrap:hover .upload-label{opacity:1!important;}</style>
@@ -183,45 +180,37 @@ footer{background:var(--navy-deep);padding:2.5rem 3rem;border-top:1px solid rgba
     <div class="section-title">Gallery</div>
     <div class="divider"></div>
     <div class="gallery-grid" id="galleryGrid">
-      <div class="gallery-cell" onclick="triggerUpload(0)">
+      <div class="gallery-cell">
         <img src="images/normal-fede.webp"  alt="Haircut" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
         <div class="empty-icon" style="display:none">&#9986;</div>
-        <input type="file" accept="image/*" id="gup0" onchange="replaceGalleryPhoto(this,0)" style="display:none" />
       </div>
-      <div class="gallery-cell" onclick="triggerUpload(1)">
+      <div class="gallery-cell">
         <img src="images/beard_sculpt.webp"  alt="Barber at work" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
         <div class="empty-icon" style="display:none">&#128136;</div>
-        <input type="file" accept="image/*" id="gup1" onchange="replaceGalleryPhoto(this,1)" style="display:none" />
       </div>
-      <div class="gallery-cell" onclick="triggerUpload(2)">
+      <div class="gallery-cell">
         <img src="images/women_fade_and_desigg.jpg"  alt="Fade haircut" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
         <div class="empty-icon" style="display:none">&#129522;</div>
-        <input type="file" accept="image/*" id="gup2" onchange="replaceGalleryPhoto(this,2)" style="display:none" />
       </div>
-      <div class="gallery-cell" onclick="triggerUpload(3)">
+      <div class="gallery-cell">
         <img src="images/hot_towel.jpg"  alt="Beard trim" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
         <div class="empty-icon" style="display:none">&#129471;</div>
-        <input type="file" accept="image/*" id="gup3" onchange="replaceGalleryPhoto(this,3)" style="display:none" />
       </div>
-      <div class="gallery-cell" onclick="triggerUpload(4)">
+      <div class="gallery-cell">
         <img src="images/full_groom.webp"  alt="Barber shop interior" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
         <div class="empty-icon" style="display:none">&#9889;</div>
-        <input type="file" accept="image/*" id="gup4" onchange="replaceGalleryPhoto(this,4)" style="display:none" />
       </div>
-      <div class="gallery-cell" onclick="triggerUpload(5)">
+      <div class="gallery-cell">
         <img src="images/kids.jpg"  alt="Haircut style" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
         <div class="empty-icon" style="display:none">&#128081;</div>
-        <input type="file" accept="image/*" id="gup5" onchange="replaceGalleryPhoto(this,5)" style="display:none" />
       </div>
-      <div class="gallery-cell" onclick="triggerUpload(6)">
+      <div class="gallery-cell">
         <img src="images/taper.jpg"  alt="Shave" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
         <div class="empty-icon" style="display:none">&#128136;</div>
-        <input type="file" accept="image/*" id="gup6" onchange="replaceGalleryPhoto(this,6)" style="display:none" />
       </div>
-      <div class="gallery-cell" onclick="triggerUpload(7)">
+      <div class="gallery-cell">
         <img src="images/women_buzz_cut.jpg"  alt="Barber" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
         <div class="empty-icon" style="display:none">&#9986;</div>
-        <input type="file" accept="image/*" id="gup7" onchange="replaceGalleryPhoto(this,7)" style="display:none" />
       </div>
     </div>
   </div>
@@ -460,9 +449,6 @@ function replaceAboutPhoto(input) {
   reader.readAsDataURL(input.files[0]);
 }
 
-function triggerUpload(idx) {
-  document.getElementById('gup' + idx).click();
-}
 
 function replaceGalleryPhoto(input, idx) {
   if (!input.files || !input.files[0]) return;
